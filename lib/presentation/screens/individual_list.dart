@@ -6,6 +6,7 @@ import 'package:events_calendar/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../model/calendar_model.dart';
 
@@ -15,6 +16,15 @@ class IndividualList extends StatelessWidget {
   final Datum userData;
 
   const IndividualList({super.key, required this.tabType, required this.userData});
+
+  _makingPhoneCall(String number) async {
+    var url = Uri.parse("tel:$number");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,18 +66,23 @@ class IndividualList extends StatelessWidget {
                   ],
                 ),
 
-                Container(
-                  height: 40,
-                  width: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: getCardShadow(),
-                    color: Colors.white
-                  ),
-                  child: Icon(
-                    Icons.call,
-                    color: Colors.blue,
+                InkWell(
+                  onTap: (){
+                    _makingPhoneCall(userData.contactNo.toString());
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: getCardShadow(),
+                      color: Colors.white
+                    ),
+                    child: Icon(
+                      Icons.call,
+                      color: Colors.blue,
+                    ),
                   ),
                 ),
               ],
